@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pickle
 import pandas as pd
-import sklearn
+import scikit-learn
 # Streamlit UI
 st.title("Multiple Disease Prediction")
 
