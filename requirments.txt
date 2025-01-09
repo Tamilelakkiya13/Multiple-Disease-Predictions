@@ -2,5 +2,6 @@
  numpy 
  pickle
  pandas 
-sklern
+
+
 
