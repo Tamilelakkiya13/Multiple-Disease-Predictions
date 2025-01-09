@@ -2,7 +2,15 @@ import streamlit as st
 import numpy as np
 import pickle
 import pandas as pd
-# Streamlit UI
+# Streamlit UI# Load the trained Liver Disease model
+with open("liver_model.pkl", "rb") as file:
+    liver_model = pickle.load(file)
+
+with open("parkinsons_model.pkl", "rb") as file:
+    parkinsons_model = pickle.load(file)
+
+with open("kidney_model (1).pkl", "rb") as file:
+    kidney_model = pickle.load(file)
 st.title("Multiple Disease Prediction")
 
 # Sidebar for disease selection
@@ -11,14 +19,7 @@ nav = st.sidebar.radio("Select Disease Prediction", ["Parkinson's Disease", "Kid
 if nav == "Parkinson's Disease":
     st.header("Parkinson's Disease Prediction")
     
-    # Load the Parkinson's model
-    try:
-        parkinson_model = pickle.load(open('parkinsons_model.pkl', 'rb'))
-    except FileNotFoundError:
-        st.error("Model file not found. Please check the file path.")
-        st.stop()
-
-    # Input fields for Parkinson's disease prediction
+   # Input fields for Parkinson's disease prediction
     MDVP_Fo_Hz = st.number_input("Fundamental Frequency (MDVP:Fo(Hz))", min_value=0.0, value=0.0)
     MDVP_Fhi_Hz = st.number_input("Maximum Frequency (MDVP:Fhi(Hz))", min_value=0.0, value=0.0)
     MDVP_Flo_Hz = st.number_input("Minimum Frequency (MDVP:Flo(Hz))", min_value=0.0, value=0.0)
@@ -61,13 +62,7 @@ if nav == "Parkinson's Disease":
 
 elif nav == "Kidney Disease":
     st.header("Kidney Disease Prediction")
-    # Load the kidney model
-    try:
-        kidney_model = pickle.load(open('kidney_model (1).pkl', 'rb'))
-    except FileNotFoundError:
-        st.error("Model file not found. Please check the file path.")
-        st.stop() 
-    # Define input fields for Kidney disease prediction
+         # Define input fields for Kidney disease prediction
 
     Age = st.number_input("Age", min_value=1,step=1)
     Blood_Pressure = st.number_input("Blood Pressure", min_value=0.0)
@@ -124,14 +119,7 @@ elif nav == "Kidney Disease":
 elif nav == "Liver Disease":
     st.header("Liver Disease Prediction")
 
-    # Load the liver's model
-    try:
-        liver_model = pickle.load(open('liver_model.pkl','rb'))
-    except FileNotFoundError:
-        st.error("Model file not found. Please check the file path.")
-        st.stop()    
-
-    # Define input fields for Liver disease prediction
+      # Define input fields for Liver disease prediction
     
     Age= st.number_input("Age", min_value=1, step=1)
     Gender = st.selectbox("Gender", [1.0, 0.0], format_func=lambda x: "Male" if x == 1.0 else "Female")
