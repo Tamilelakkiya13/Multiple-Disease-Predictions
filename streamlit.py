@@ -1,8 +1,9 @@
 import streamlit as st
-import numpy as np
 import pickle
+import numpy as np
 import pandas as pd
-# Streamlit UI# Load the trained Liver Disease model
+
+# Load the trained Liver Disease model
 with open("liver_model.pkl", "rb") as file:
     liver_model = pickle.load(file)
 
@@ -11,17 +12,37 @@ with open("parkinsons_model.pkl", "rb") as file:
 
 with open("kidney_model (1).pkl", "rb") as file:
     kidney_model = pickle.load(file)
-st.title("Multiple Disease Prediction")
+
+
+# Streamlit dashboard
+st.header("🩺MULTIPLE DISEASE PREDICTION SYSTEM")
+
+   
 st.sidebar.markdown("### Disease Prediction Options")
 selected_dataset = st.sidebar.selectbox(
     "Choose a Disease to Predict:",
-    ("Parkinson's Disease", "Liver Disease", "Kidney Disease")
+    ("🏥 Home", "Parkinson's Disease", "Liver Disease", "Kidney Disease")
 )
 
-if selected_dataset == "Parkinson's Disease":
+if selected_dataset == "🏥 Home":
+    st.write("""
+            Welcome to the *Multiple Disease Prediction System*. This application allows you to predict the likelihood of certain diseases based on input medical data. 
+            Currently, the system supports predictions for the following conditions:
+            - *Parkinson's Disease*
+            - *Liver Disease*
+            - *Kidney Disease* 
+
+            To get started:
+            1. Use the sidebar to select a disease you want to predict.
+            2. Enter the required medical measurements in the input fields.
+            3. Click on the "Predict" button to see the results.
+
+            *Note:* This tool is for educational purposes and should not be used as a substitute for professional medical advice.
+            """)
+
+elif selected_dataset == "Parkinson's Disease":
     st.header("Parkinson's Disease Prediction")
-    
-   # Input fields for Parkinson's disease prediction
+     # Input fields for Parkinson's disease prediction
     MDVP_Fo_Hz = st.number_input("Fundamental Frequency (MDVP:Fo(Hz))", min_value=0.0, value=0.0)
     MDVP_Fhi_Hz = st.number_input("Maximum Frequency (MDVP:Fhi(Hz))", min_value=0.0, value=0.0)
     MDVP_Flo_Hz = st.number_input("Minimum Frequency (MDVP:Flo(Hz))", min_value=0.0, value=0.0)
@@ -50,106 +71,103 @@ if selected_dataset == "Parkinson's Disease":
                                  MDVP_RAP, MDVP_PPQ, Jitter_DDP, MDVP_Shimmer, MDVP_Shimmer_dB,
                                  Shimmer_APQ3, Shimmer_APQ5, MDVP_APQ, Shimmer_DDA, NHR, HNR,
                                  RPDE, DFA, spread1, spread2, D2, PPE]])
+    
 
-    # Button for prediction
-    if st.button("Predict"):
+    #for col in range(input_features.shape[1]):
+        #input_features[:, col] = [str(x).encode('utf-8').decode('utf-8') if isinstance(x, str) else x for x in input_features[:, col]]
+
+    # Predict when button is clicked
+    if st.button("Predict Parkinsons Disease"):
         try:
             prediction = parkinsons_model.predict(input_features)
             if prediction[0] == 1:
-                st.success("The model predicts that the individual has Parkinson's disease.")
+                st.success("🚨 Positive for Parkinson's disease.")
             else:
-                st.success("The model predicts that the individual does not have Parkinson's disease.")
-        except Exception as e:
-            st.error(f"An error occurred during prediction: {e}")
-
-elif selected_dataset == "Kidney Disease":
-    st.header("Kidney Disease Prediction")
-         # Define input fields for Kidney disease prediction
-
-    Age = st.number_input("Age", min_value=1,step=1)
-    Blood_Pressure = st.number_input("Blood Pressure", min_value=0.0)
-    Specific_Gravity = st.number_input("Specific Gravity", min_value=1.0, max_value=1.03, value=1.02, format="%.2f")
-    Albumin = st.selectbox("Albumin", [0, 1, 2, 3, 4])  # Assuming Albumin is categorical (0-4)
-    Sugar = st.selectbox("Sugar", [0, 1])  # Binary (0 or 1)
-    Red_Blood_Cells = st.selectbox("Red Blood Cells", ["normal", "abnormal"])  # Categorical
-    Pus_Cell = st.selectbox("Pus Cell", ["normal", "abnormal"])  # Categorical
-    Pus_Cell_Clumps = st.selectbox("Pus Cell Clumps", ["present", "notpresent"])  # Categorical
-    Bacteria = st.selectbox("Bacteria", ["present", "notpresent"])  # Categorical
-    Blood_Glucose_Random = st.number_input("Blood Glucose Random", min_value=0.0, value=0.0)
-    Blood_Urea = st.number_input("Blood Urea", min_value=0.0, value=0.0)
-    Serum_Creatinine = st.number_input("Serum Creatinine", min_value=0.0, value=0.0)
-    Sodium = st.number_input("Sodium", min_value=0.0, value=0.0)
-    Potassium = st.number_input("Potassium", min_value=0.0, value=0.0)
-    Hemoglobin = st.number_input("Hemoglobin", min_value=0.0, value=0.0)
-    Packed_Cell_Volume = st.number_input("Packed Cell Volume", min_value=0.0, value=0.0)
-    White_Blood_Cell_Count = st.number_input("White Blood Cell Count", min_value=0.0, value=0.0)
-    Red_Blood_Cell_Count = st.number_input("Red Blood Cell Count", min_value=0.0, value=0.0)
-
-    # Categorical health conditions
-    Hypertension = st.selectbox("Hypertension", ["yes", "no"])
-    Diabetes_Mellitus = st.selectbox("Diabetes Mellitus", ["yes", "no"])
-    Coronary_Artery_Disease = st.selectbox("Coronary Artery Disease", ["yes", "no"])
-    Appetite = st.selectbox("Appetite", ["good", "poor"])
-    Pedal_Edema = st.selectbox("Pedal Edema", ["yes", "no"])
-    Anemia = st.selectbox("Anemia", ["yes", "no"])
-
-    
-    # Map Specific Gravity to encoded values (if required)
-    specific_gravity_mapping = {1.005: 0, 1.01: 1, 1.015: 2}  # Example mapping
-    Specific_Gravity = specific_gravity_mapping.get(Specific_Gravity, -1)  # Default to -1 if not mapped
-    
-    # Prepare input features as a 2D array for prediction
-    input_features = np.array([[Age,Blood_Pressure,Specific_Gravity,Albumin,Sugar,1 if Red_Blood_Cells == "abnormal" else 0,1 if Pus_Cell == "abnormal" else 0,
-                                1 if Pus_Cell_Clumps == "present" else 0,1 if Bacteria == "present" else 0,Blood_Glucose_Random,Blood_Urea,
-                                Serum_Creatinine,Sodium,Potassium,Hemoglobin,Packed_Cell_Volume,White_Blood_Cell_Count,Red_Blood_Cell_Count,
-                                1 if Hypertension == "yes" else 0,1 if Diabetes_Mellitus == "yes" else 0,1 if Coronary_Artery_Disease == "yes" else 0,
-                                1 if Appetite == "poor" else 0,1 if Pedal_Edema == "yes" else 0,1 if Anemia == "yes" else 0]]).astype(float)
-    # Cleanse string columns (if necessary)
-    for col in range(input_features.shape[1]):
-        input_features[:, col] = [str(x).encode('utf-8').decode('utf-8') if isinstance(x, str) else x for x in input_features[:, col]]
-    # Button for prediction
-    if st.button("Predict"):
-        try:
-            prediction = kidney_model.predict(input_features)
-            if prediction[0] == 0:
-                st.success("The model predicts that the individual has Kidney disease.")
-            else:
-                st.success("The model predicts that the individual does not have Kidney disease.")
+                st.success("✅ Negative for Parkinson's disease.")
         except Exception as e:
             st.error(f"An error occurred during prediction: {e}")
 
 elif selected_dataset == "Liver Disease":
     st.header("Liver Disease Prediction")
-
-      # Define input fields for Liver disease prediction
     
-    Age= st.number_input("Age", min_value=1, step=1)
-    Gender = st.selectbox("Gender", [1.0, 0.0], format_func=lambda x: "Male" if x == 1.0 else "Female")
-    Total_Bilirubin= st.number_input("Total Bilirubin", min_value=0.0, value=0.0)
-    Direct_Bilirubin= st.number_input("Direct Bilirubin", min_value=0.0, value=0.0)
-    Alkaline_Phosphotase= st.number_input("Alkaline Phosphotase", min_value=0, value=0)
-    Alamine_Aminotransferase= st.number_input("Alamine Aminotransferase", min_value=0, value=0)
-    Aspartate_Aminotransferase= st.number_input("Aspartate Aminotransferase", min_value=0, value=0)
-    Total_Proteins= st.number_input("Total Proteins", min_value=0.0, value=0.0)
-    Albumin= st.number_input("Albumin", min_value=0.0, value=0.0)
-    Albumin_and_Globulin_Ratio= st.number_input("Albumin and Globulin Ratio", min_value=0.0, value=0.0)
+    # Feature Inputs for Liver Disease
+    Age = st.number_input("Age", min_value=1, step=1)
+    Total_Bilirubin = st.number_input("Total Bilirubin", min_value=0.0)
+    Direct_Bilirubin = st.number_input("Direct Bilirubin", min_value=0.0)
+    Alkaline_Phosphotase = st.number_input("Alkaline Phosphotase", min_value=0.0)
+    Alamine_Aminotransferase = st.number_input("Alamine Aminotransferase", min_value=0.0)
+    Aspartate_Aminotransferase = st.number_input("Aspartate Aminotransferase", min_value=0.0)
+    Total_Proteins = st.number_input("Total Proteins", min_value=0.0)
+    Albumin = st.number_input("Albumin", min_value=0.0)
+    Albumin_and_Globulin_Ratio = st.number_input("Albumin and Globulin Ratio", min_value=0.0)
 
-    # Prepare input features as a 2D array for prediction
-    input_features = np.array([[Age,float(Gender),Total_Bilirubin,Direct_Bilirubin,Alkaline_Phosphotase,
-                                Alamine_Aminotransferase,Aspartate_Aminotransferase,Total_Proteins,
-                                Albumin,Albumin_and_Globulin_Ratio]]).astype(float)
-    # Cleanse string columns (if necessary)
-    for col in range(input_features.shape[1]):
-        input_features[:, col] = [str(x).encode('utf-8').decode('utf-8') if isinstance(x, str) else x for x in input_features[:, col]]
+    # Prepare the input features
+    input_features = np.array([[Age, Total_Bilirubin, Direct_Bilirubin, Alkaline_Phosphotase,
+                                Alamine_Aminotransferase, Aspartate_Aminotransferase, Total_Proteins,
+                                Albumin, Albumin_and_Globulin_Ratio]])
+    
+    # Adjust input to match model's expected feature count
+    expected_features = liver_model.feature_names_in_  # Get expected feature names
+    input_df = pd.DataFrame(input_features, columns=expected_features[:input_features.shape[1]])
+
+    # Add missing features with default values (e.g., 0)
+    for feature in expected_features:
+        if feature not in input_df.columns:
+            input_df[feature] = 0  # Default value for missing features
+    
+    # Reorder columns to match the model's feature order
+    input_df = input_df[expected_features]
+
     # Button for prediction
-    if st.button("Predict"):
+    if st.button("Predict Liver Disease"):
         try:
-            prediction = liver_model.predict(input_features)
+            prediction = liver_model.predict(input_df)  # Pass the DataFrame
             if prediction[0] == 1:
-                st.success("The model predicts that the individual does not have Liver disease.")
+                st.success("🚨 Positive for Liver disease.")
             else:
-                st.success("The model predicts that the individual has Liver disease.")
+                st.success("✅ Negative for Liver disease.")
         except Exception as e:
             st.error(f"An error occurred during prediction: {e}")
 
-st.text("Thank you for using the dashboard!")
+elif selected_dataset == "Kidney Disease":
+    st.header("Kidney Disease Prediction")
+    # Feature Inputs for Kidney Disease
+    age = st.number_input("Age", min_value=1, step=1)
+    bp = st.number_input("Blood Pressure", min_value=0)
+    sg = st.number_input("Specific Gravity", min_value=1.0, max_value=1.030, step=0.001)
+    al = st.number_input("Albumin", min_value=0.0)
+    su = st.number_input("Sugar", min_value=0.0)
+    rbc = st.number_input("Red Blood Cells", min_value=0.0)
+    pc = st.number_input("Pus Cells", min_value=0.0)
+    sc = st.number_input("Serum Creatinine Level", min_value=0.0)
+    sod = st.number_input("Sodium Level in Blood", min_value=0.0)
+    wc = st.number_input("White Blood Cells", min_value=0.0)
+    rc = st.number_input("Red Blood Cell Count", min_value=0.0)
+    cad = st.number_input("Coronary Artery Disease", min_value=0.0)
+    appet = st.number_input("Appetite Status", min_value=0.0)
+
+    # Prepare the input features
+    input_features = np.array([[age, bp, sg, al, su, rbc, pc, sc, sod, wc, rc, cad, appet]])
+
+    # Adjust input features to match model's expected feature count
+    expected_features = kidney_model.n_features_in_
+    if input_features.shape[1] < expected_features:
+        # Add missing features with a default value (e.g., 0)
+        missing_features = expected_features - input_features.shape[1]
+        input_features = np.hstack([input_features, np.zeros((input_features.shape[0], missing_features))])
+    elif input_features.shape[1] > expected_features:
+        # Trim extra features
+        input_features = input_features[:, :expected_features]
+        # Predict when the button is clicked
+    if st.button("Predict Kidney Disease"):
+        try:
+            prediction = kidney_model.predict(input_features)
+            if prediction[0] == 1:
+                st.success("🚨 Positive for Kidney Disease")
+            else:
+                st.success("✅ Negative for Kidney Disease")
+        except Exception as e:
+            st.error(f"An error occurred during prediction: {e}")
+       
+
+   
