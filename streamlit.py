@@ -12,11 +12,13 @@ with open("parkinsons_model.pkl", "rb") as file:
 with open("kidney_model (1).pkl", "rb") as file:
     kidney_model = pickle.load(file)
 st.title("Multiple Disease Prediction")
+st.sidebar.markdown("### Disease Prediction Options")
+selected_dataset = st.sidebar.selectbox(
+    "Choose a Disease to Predict:",
+    ("Parkinson's Disease", "Liver Disease", "Kidney Disease")
+)
 
-# Sidebar for disease selection
-nav = st.sidebar.radio("Select Disease Prediction", ["Parkinson's Disease", "Kidney Disease", "Liver Disease"])
-
-if nav == "Parkinson's Disease":
+if selected_dataset == "Parkinson's Disease":
     st.header("Parkinson's Disease Prediction")
     
    # Input fields for Parkinson's disease prediction
@@ -52,7 +54,7 @@ if nav == "Parkinson's Disease":
     # Button for prediction
     if st.button("Predict"):
         try:
-            prediction = parkinson_model.predict(input_features)
+            prediction = parkinsons_model.predict(input_features)
             if prediction[0] == 1:
                 st.success("The model predicts that the individual has Parkinson's disease.")
             else:
@@ -60,7 +62,7 @@ if nav == "Parkinson's Disease":
         except Exception as e:
             st.error(f"An error occurred during prediction: {e}")
 
-elif nav == "Kidney Disease":
+elif selected_dataset == "Kidney Disease":
     st.header("Kidney Disease Prediction")
          # Define input fields for Kidney disease prediction
 
@@ -116,7 +118,7 @@ elif nav == "Kidney Disease":
         except Exception as e:
             st.error(f"An error occurred during prediction: {e}")
 
-elif nav == "Liver Disease":
+elif selected_dataset == "Liver Disease":
     st.header("Liver Disease Prediction")
 
       # Define input fields for Liver disease prediction
