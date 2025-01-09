@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pickle
 import pandas as pd
-import scikit-learn
+import sklearn 
 # Streamlit UI
 st.title("Multiple Disease Prediction")
 
@@ -70,8 +70,8 @@ elif nav == "Kidney Disease":
         st.stop() 
     # Define input fields for Kidney disease prediction
 
-    Age = st.number_input("Age", min_value=1, max_value=120, value=30)
-    Blood_Pressure = st.number_input("Blood Pressure", min_value=1, max_value=200, value=80)
+    Age = st.number_input("Age", min_value=1,step=1)
+    Blood_Pressure = st.number_input("Blood Pressure", min_value=0.0)
     Specific_Gravity = st.number_input("Specific Gravity", min_value=1.0, max_value=1.03, value=1.02, format="%.2f")
     Albumin = st.selectbox("Albumin", [0, 1, 2, 3, 4])  # Assuming Albumin is categorical (0-4)
     Sugar = st.selectbox("Sugar", [0, 1])  # Binary (0 or 1)
@@ -115,7 +115,7 @@ elif nav == "Kidney Disease":
     if st.button("Predict"):
         try:
             prediction = kidney_model.predict(input_features)
-            if prediction[0] == 1:
+            if prediction[0] == 0:
                 st.success("The model predicts that the individual has Kidney disease.")
             else:
                 st.success("The model predicts that the individual does not have Kidney disease.")
@@ -134,7 +134,7 @@ elif nav == "Liver Disease":
 
     # Define input fields for Liver disease prediction
     
-    Age= st.number_input("Age", min_value=1, max_value=120, value=30)
+    Age= st.number_input("Age", min_value=1, step=1)
     Gender = st.selectbox("Gender", [1.0, 0.0], format_func=lambda x: "Male" if x == 1.0 else "Female")
     Total_Bilirubin= st.number_input("Total Bilirubin", min_value=0.0, value=0.0)
     Direct_Bilirubin= st.number_input("Direct Bilirubin", min_value=0.0, value=0.0)
@@ -156,7 +156,7 @@ elif nav == "Liver Disease":
     if st.button("Predict"):
         try:
             prediction = liver_model.predict(input_features)
-            if prediction[0] == 0:
+            if prediction[0] == 1:
                 st.success("The model predicts that the individual does not have Liver disease.")
             else:
                 st.success("The model predicts that the individual has Liver disease.")
