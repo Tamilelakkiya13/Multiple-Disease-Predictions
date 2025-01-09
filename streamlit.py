@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pickle
 import pandas as pd
+import sklearn 
 # Streamlit UI
 st.title("Multiple Disease Prediction")
 
@@ -13,7 +14,7 @@ if nav == "Parkinson's Disease":
     
     # Load the Parkinson's model
     try:
-        parkinson_model = pickle.load(open('xgbparkinsons_model.pkl', 'rb'))
+        parkinson_model = pickle.load(open('parkinsons_model.pkl', 'rb'))
     except FileNotFoundError:
         st.error("Model file not found. Please check the file path.")
         st.stop()
@@ -63,7 +64,7 @@ elif nav == "Kidney Disease":
     st.header("Kidney Disease Prediction")
     # Load the kidney model
     try:
-        kidney_model = pickle.load(open('kidney_model.pkl', 'rb'))
+        kidney_model = pickle.load(open('kidney_model (1).pkl', 'rb'))
     except FileNotFoundError:
         st.error("Model file not found. Please check the file path.")
         st.stop() 
