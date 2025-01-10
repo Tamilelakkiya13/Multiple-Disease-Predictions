@@ -2,8 +2,8 @@ import streamlit as st
 import pickle
 import numpy as np
 import pandas as pd
-#import xgboost as xgb
-import sklearn
+import xgboost as xgb
+#import sklearn
 # Load the trained Liver Disease model
 with open("liver_model.pkl", "rb") as file:
     liver_model = pickle.load(file)
