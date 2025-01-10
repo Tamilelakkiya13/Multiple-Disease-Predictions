@@ -1,7 +1,7 @@
- streamlit
- numpy 
- pickle
- pandas 
+streamlit
+numpy 
+pickle
+pandas 
 scikit-learn
 
 
