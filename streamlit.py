@@ -2,7 +2,7 @@ import streamlit as st
 import pickle
 import numpy as np
 import pandas as pd
-
+import xgboost as xgb
 # Load the trained Liver Disease model
 with open("liver_model.pkl", "rb") as file:
     liver_model = pickle.load(file)
@@ -122,7 +122,7 @@ elif selected_dataset == "Liver Disease":
     if st.button("Predict Liver Disease"):
         try:
             prediction = liver_model.predict(input_df)  # Pass the DataFrame
-            if prediction[0] == 1:
+            if prediction[0] == 0:
                 st.success("🚨 Positive for Liver disease.")
             else:
                 st.success("✅ Negative for Liver disease.")
@@ -162,7 +162,7 @@ elif selected_dataset == "Kidney Disease":
     if st.button("Predict Kidney Disease"):
         try:
             prediction = kidney_model.predict(input_features)
-            if prediction[0] == 1:
+            if prediction[0] == 0:
                 st.success("🚨 Positive for Kidney Disease")
             else:
                 st.success("✅ Negative for Kidney Disease")
