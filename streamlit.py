@@ -2,8 +2,6 @@ import streamlit as st
 import pickle
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
 
 # Load the trained Liver Disease model
 with open("liver_model.pkl", "rb") as file:
