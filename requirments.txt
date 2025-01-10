@@ -4,5 +4,3 @@ pickle
 pandas 
 scikit-learn
 
-
-
