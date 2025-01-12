@@ -4,15 +4,29 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 from sklearn.ensemble import RandomForestClassifier 
-# Load the trained Liver Disease model
-with open("liver_model.pkl", "rb") as file:
-    liver_model = pickle.load(file)
+import os
 
-with open("parkinsons_model.pkl", "rb") as file:
-    parkinsons_model = pickle.load(file)
+# Load the trained models with error handling
+try:
+    with open("liver_model.pkl", "rb") as file:
+        liver_model = pickle.load(file)
+except FileNotFoundError:
+    st.error("Liver Disease model file not found. Ensure 'liver_model.pkl' is in the app directory.")
+    liver_model = None
 
-with open("kidney_model (1).pkl", "rb") as file:
-    kidney_model = pickle.load(file)
+try:
+    with open("parkinsons_model.pkl", "rb") as file:
+        parkinsons_model = pickle.load(file)
+except FileNotFoundError:
+    st.error("Parkinson's Disease model file not found. Ensure 'parkinsons_model.pkl' is in the app directory.")
+    parkinsons_model = None
+
+try:
+    with open("kidney_model.pkl", "rb") as file:
+        kidney_model = pickle.load(file)
+except FileNotFoundError:
+    st.error("Kidney Disease model file not found. Ensure 'kidney_model (1).pkl' is in the app directory.")
+    kidney_model = None
 
 
 # Streamlit dashboard
